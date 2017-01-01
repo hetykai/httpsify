@@ -58,12 +58,12 @@ func main() {
 	}
 	log.Fatal(http.Serve(listener, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
-		tr := &http.Transport{
+		client := &http.Client{
 			CheckRedirect: func(req *http.Request, via []*http.Request) error {
 				return http.ErrUseLastResponse
 		    	},
 		}
-		client := &http.Client{Transport: tr}
+		//client := &http.Client{Transport: tr}
 		req, err := http.NewRequest(r.Method, *backend + r.URL.RequestURI(), r.Body)
 		if err != nil {
 			http.Error(w, http.StatusText(504), 504)
