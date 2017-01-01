@@ -58,6 +58,12 @@ func main() {
 	}
 	log.Fatal(http.Serve(listener, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
+		tr := &http.Transport{
+			CheckRedirect: func(req *http.Request, via []*http.Request) error {
+				return http.ErrUseLastResponse
+		    	},
+		}
+		client := &http.Client{Transport: tr}
 		req, err := http.NewRequest(r.Method, *backend + r.URL.RequestURI(), r.Body)
 		if err != nil {
 			http.Error(w, http.StatusText(504), 504)
@@ -78,7 +84,7 @@ func main() {
 		req.Header.Set("X-Forwarded-Proto", "https")
 		req.Header.Set("X-Forwarded-Host", r.Host)
 		req.Header.Set("X-Forwarded-Port", *port)
-		res, err := http.DefaultClient.Do(req)
+		res, err := client.Do(req)
 		if err != nil {
 			http.Error(w, http.StatusText(504), 504)
 			return
