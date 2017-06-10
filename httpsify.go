@@ -10,17 +10,8 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
-	"regexp"
 	"strings"
 
-	"github.com/gorilla/handlers"
-	"github.com/tdewolff/minify"
-	"github.com/tdewolff/minify/css"
-	"github.com/tdewolff/minify/html"
-	"github.com/tdewolff/minify/js"
-	"github.com/tdewolff/minify/json"
-	"github.com/tdewolff/minify/svg"
-	"github.com/tdewolff/minify/xml"
 	"golang.org/x/crypto/acme/autocert"
 )
 
@@ -30,8 +21,6 @@ var (
 	domains     = flag.String("domains", "", "a comma separated strings of domain[->[ip]:port]")
 	backend     = flag.String("backend", ":80", "the default backend to be used")
 	sslCacheDir = flag.String("ssl-cache-dir", "./httpsify-ssl-cache", "the cache directory to cache generated ssl certs")
-	gzip        = flag.Int("gzip", 0, "gzip compression level [0-9]")
-	mnfy        = flag.Bool("minify", true, "whether to minify the output or not")
 
 	// internal vars
 	domain_backend = map[string]string{}
@@ -59,27 +48,13 @@ func main() {
 		whitelisted = append(whitelisted, parts[0])
 	}
 
-	minifier := minify.New()
-
-	if *mnfy {
-		minifier.AddFunc("text/css", css.Minify)
-		minifier.AddFunc("text/html", html.Minify)
-		minifier.AddFunc("image/svg+xml", svg.Minify)
-		minifier.AddFuncRegexp(regexp.MustCompile("[/+]javascript$"), js.Minify)
-		minifier.AddFuncRegexp(regexp.MustCompile("[/+]json$"), json.Minify)
-		minifier.AddFuncRegexp(regexp.MustCompile("[/+]xml$"), xml.Minify)
-	}
-
 	m := autocert.Manager{
 		Prompt:     autocert.AcceptTOS,
 		HostPolicy: autocert.HostWhitelist(whitelisted...),
 		Cache:      autocert.DirCache(*sslCacheDir),
 	}
 
-	h := handlers.CompressHandlerLevel(
-		minifier.Middleware(handler()),
-		*gzip,
-	)
+	h := handler()
 
 	s := &http.Server{
 		Addr:      *listen,
