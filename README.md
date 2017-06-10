@@ -6,10 +6,8 @@ It listens on `:443` by default **DON'T CHANGE IT** because letsencrypt uses tha
 Features
 =========
 * Auto `SSL Certs` generation and renewal .
-* Auto `GZIP` **(optional)**, `default: No` .
-* Auto `Minify (css, js, html, json, xml)` **(optional)**, `default: yes` .
 * Now you can specify custom backends for custom domains .
-* No serve `websocket` based requestes easily with no problem .
+* Now serves `websocket` based requestes easily with no problem .
 
 Requirements
 =============
