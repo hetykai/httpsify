@@ -32,9 +32,8 @@ func main() {
 
 	if *domains == "" {
 		flag.Usage()
-		fmt.Println(`Example(template): httpsify -domains "example.org,api.example.org->localhost:366, api2.example.org->:367"`)
-		fmt.Println(`Example(real-life1): httpsify -domains "www.site.com,apiv1.site.com->:8080,apiv2.site.com->:8081" -minify=true -gzip=9`)
-		fmt.Println(`Example(real-life2): httpsify -domains "www.site.com,site.com" -backend=:8080 -minify=true -gzip=0`)
+		fmt.Println(`Example(1): httpsify -domains "example.org,api.example.org->localhost:366, api2.example.org->:367"`)
+		fmt.Println(`Example(2): httpsify -domains "www.site.com,apiv1.site.com->:8080,apiv2.site.com->:8081"`)
 		return
 	}
 
