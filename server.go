@@ -45,6 +45,7 @@ func ServeHTTP() http.Handler {
 				loadbalancer.UpsertServer(testutils.ParseURI(upstream))
 			}
 			loadbalancer.ServeHTTP(res, req)
+			return
 		}
 		http.Error(res, "The request domain couldn't be found here", http.StatusNotImplemented)
 	})
