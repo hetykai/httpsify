@@ -4,10 +4,12 @@ import (
 	"context"
 	"crypto/tls"
 	"errors"
+	"io/ioutil"
 	"net/http"
 )
 
 import (
+	log "github.com/sirupsen/logrus"
 	"github.com/vulcand/oxy/forward"
 	"github.com/vulcand/oxy/roundrobin"
 	"github.com/vulcand/oxy/testutils"
@@ -32,6 +34,7 @@ func InitServer() error {
 		TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
 		Handler:   ServeHTTP(),
 	}
+	log.SetOutput(ioutil.Discard)
 	return s.ListenAndServeTLS("", "")
 }
 
