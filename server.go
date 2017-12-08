@@ -6,13 +6,14 @@ import (
 	"errors"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 )
 
 import (
+	"github.com/fatih/color"
 	log "github.com/sirupsen/logrus"
 	"github.com/vulcand/oxy/forward"
 	"github.com/vulcand/oxy/roundrobin"
-	"github.com/vulcand/oxy/testutils"
 	"golang.org/x/crypto/acme/autocert"
 )
 
@@ -45,7 +46,11 @@ func ServeHTTP() http.Handler {
 			forwarder, _ := forward.New()
 			loadbalancer, _ := roundrobin.New(forwarder)
 			for _, upstream := range upstreams {
-				loadbalancer.UpsertServer(testutils.ParseURI(upstream))
+				if url, err := url.Parse(upstream); err == nil {
+					loadbalancer.UpsertServer(url)
+				} else {
+					colorize(color.FgRed, "⇛", err.Error())
+				}
 			}
 			loadbalancer.ServeHTTP(res, req)
 			return

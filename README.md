@@ -1,29 +1,31 @@
-HTTPSify <small>v2</small>
+HTTPSify <small>v3</small>
 =============================
-A letsencrypt based reverse proxy to automatically handles ssl termination with no hassle .  
-It listens on `:443` by default **DON'T CHANGE IT** because letsencrypt uses that port to confirm ownership of your domains .  
+A `Let'sEncrypt` based reverse proxy, that will automatically generate &amp; renew valid `ssl` certs for your domains, it also enables the `http/2` protocol by default, and uses `roundrobin` as an algorithm to loadbalance the incoming requests between multiple `upstreams`
 
-Features
-=========
-* Auto `SSL Certs` generation and renewal .
-* Now you can specify custom backends for custom domains .
-* Now serves `websocket` based requestes easily with no problem .
+# Install
 
-Requirements
-=============
-* `Golang` >= 1.7
+### # Using Docker
+> Just run the following and then have fun !!
+```bash
+$ docker run -v $HOME:/root/ -p 443:443 alash3al/httpsify
+```
 
-Installation
-=============
-`go get github.com/alash3al/httpsify`
+### # Building from source
+> You must have the `Go` environment installed
+```bash
+$ go get -u github.com/alash3al/httpsify
+```
 
-Usage
-=============
-> run the following command and you will get some examples at the end .    
+### Configurations
+> Goto your `$HOME` Directory and edit the `hosts.json` to something like this
+```json
+{
+	"example1.com": ["http://localhost"],
+	"example2.com": ["http://localhost:8080", "http://localhost:8081"]
+}
+```
+> As you see, the configuration file accepts a `JSON` object/hashmap of `domain` -> `upstreams`,
+and yes, it can loadbalance the requests between multiple upstreams using `roundrobin` algorithm.
 
-`httpsify --help`
-
-Author
-========
-Mohammed Al Ashaal, a problem solver ;)
-
+> Also You don't need to restart the server to reload the configurations, because `httpsify` automatically watches the
+configurations file and reload it on any change.
