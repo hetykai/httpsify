@@ -14,6 +14,8 @@ import (
 	"golang.org/x/crypto/acme/autocert"
 )
 
+// Initialize the autocert manager and configure it,
+// also create an instance of the http.Server and link the autocert manager to it.
 func InitServer() error {
 	m := autocert.Manager{
 		Cache:  autocert.DirCache(*STORAGE),
@@ -26,13 +28,14 @@ func InitServer() error {
 		},
 	}
 	s := &http.Server{
-		Addr:      ":https",
+		Addr:      *HTTPS_ADDR,
 		TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
 		Handler:   ServeHTTP(),
 	}
 	return s.ListenAndServeTLS("", "")
 }
 
+// The main server handler
 func ServeHTTP() http.Handler {
 	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 		if upstreams, ok := HOSTS[req.Host]; ok {
