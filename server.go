@@ -30,7 +30,6 @@ func InitServer() error {
 			return errors.New("Unkown host(" + host + ")")
 		},
 	}
-	_ = m
 	s := &http.Server{
 		Addr:      *HTTPS_ADDR,
 		TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
