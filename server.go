@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	"crypto/tls"
+	// "crypto/tls"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -30,20 +30,21 @@ func InitServer() error {
 			return errors.New("Unkown host(" + host + ")")
 		},
 	}
+	_ = m
 	s := &http.Server{
 		Addr:      *HTTPS_ADDR,
-		TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
+		// TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
 		Handler:   ServeHTTP(),
 	}
 	log.SetOutput(ioutil.Discard)
-	return s.ListenAndServeTLS("", "")
+	return s.ListenAndServe()
 }
 
 // The main server handler
 func ServeHTTP() http.Handler {
 	return http.HandlerFunc(func(res http.ResponseWriter, req *http.Request) {
 		if upstreams, ok := HOSTS[req.Host]; ok {
-			forwarder, _ := forward.New()
+			forwarder, _ := forward.New(forward.PassHostHeader(true))
 			loadbalancer, _ := roundrobin.New(forwarder)
 			for _, upstream := range upstreams {
 				if url, err := url.Parse(upstream); err == nil {
@@ -52,9 +53,10 @@ func ServeHTTP() http.Handler {
 					colorize(color.FgRed, "⇛", err.Error())
 				}
 			}
+			res.Header().Set("X-HTTPSIFY-Version", VERSION)
 			loadbalancer.ServeHTTP(res, req)
 			return
 		}
-		http.Error(res, "The request domain couldn't be found here", http.StatusNotImplemented)
+		http.Error(res, "The request service couldn't be found here", http.StatusNotImplemented)
 	})
 }

@@ -9,6 +9,7 @@ import (
 import "github.com/mitchellh/go-homedir"
 
 var (
+	VERSION 	= "httpsify/v3.0.0"
 	HOME_DIR, _ = homedir.Dir()
 	HTTPS_ADDR  = flag.String("https", ":443", "the https address to listen on")
 	STORAGE     = flag.String("storage", path.Join(HOME_DIR, ".httpsify/certs"), "the ssl certs storage directory")
