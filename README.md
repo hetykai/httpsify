@@ -7,7 +7,7 @@ A `Let'sEncrypt` based reverse proxy, that will automatically generate &amp; ren
 ### # Using Docker
 > Just run the following and then have fun !!
 ```bash
-$ docker run -v $HOME:/root/ -p 443:443 alash3al/httpsify
+$ docker run --network host -v $HOME:/root/ -p 443:443 alash3al/httpsify
 ```
 
 ### # Building from source
