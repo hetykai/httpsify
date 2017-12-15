@@ -2,7 +2,7 @@ package main
 
 import (
 	"context"
-	// "crypto/tls"
+	"crypto/tls"
 	"errors"
 	"io/ioutil"
 	"net/http"
@@ -33,11 +33,11 @@ func InitServer() error {
 	_ = m
 	s := &http.Server{
 		Addr:      *HTTPS_ADDR,
-		// TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
+		TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
 		Handler:   ServeHTTP(),
 	}
 	log.SetOutput(ioutil.Discard)
-	return s.ListenAndServe()
+	return s.ListenAndServeTLS("", "")
 }
 
 // The main server handler
