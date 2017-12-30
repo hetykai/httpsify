@@ -52,7 +52,12 @@ func ServeHTTP() http.Handler {
 					colorize(color.FgRed, "⇛", err.Error())
 				}
 			}
-			res.Header().Set("X-HTTPSIFY-Version", VERSION)
+			if *EXPOSE_INFO {
+				res.Header().Set("X-HTTPSIFY-Version", VERSION)
+			}
+			if *HSTS != "" {
+				res.Header().Set("Strict-Transport-Security", *HSTS)
+			}
 			loadbalancer.ServeHTTP(res, req)
 			return
 		}
