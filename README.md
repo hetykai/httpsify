@@ -1,6 +1,10 @@
-HTTPSify <small>v3</small>
+HTTPSify <small>v3.1</small>
 =============================
-A `Let'sEncrypt` based reverse proxy, that will automatically generate &amp; renew valid `ssl` certs for your domains, it also enables the `http/2` protocol by default, and uses `roundrobin` as an algorithm to loadbalance the incoming requests between multiple `upstreams`
+A `Let'sEncrypt` based reverse proxy, that will automatically generate &amp; renew valid `ssl` certs for your domains, it also enables the `http/2` protocol by default, and uses `roundrobin` as an algorithm to loadbalance the incoming requests between multiple `upstreams`, as well as redirecting the traffic from `http` traffic to `https` just if you enabled the flag `--redirect`.
+
+NOTES
+=======
+> HTTPSify only supports `http-01` challenge because [Let's Encrypt disables TLS-SNI-01 validation](http://www.zdnet.com/article/lets-encrypt-disables-tls-sni-01-validation/)
 
 # Quick Start
 
@@ -20,7 +24,7 @@ $ go get -u github.com/alash3al/httpsify
 > Goto your `$HOME` Directory and edit the `hosts.json` to something like this
 ```json
 {
-	"example1.com": ["http://localhost"],
+	"example1.com": ["http://localhost:9080"],
 	"example2.com": ["http://localhost:8080", "http://localhost:8081"]
 }
 ```

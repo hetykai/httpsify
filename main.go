@@ -17,6 +17,7 @@ func main() {
 		WatchChanges()
 	}()
 
+	colorize(color.FgGreen, "⇛ Running the HTTP server on address ("+*HTTP_ADDR+") ...")
 	colorize(color.FgGreen, "⇛ Running the HTTPS (HTTP/2) server on address ("+*HTTPS_ADDR+") ...")
 	colorize(color.FgRed, InitServer())
 }
