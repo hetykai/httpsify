@@ -42,7 +42,11 @@ func InitServer() error {
 	log.SetOutput(ioutil.Discard)
 
 	go (func() {
-		errchan <- http.ListenAndServe(*HTTP_ADDR, m.HTTPHandler(nil))
+		handler := m.HTTPHandler(nil)
+		if *AUTOREDIRECT {
+			handler = m.HTTPHandler(ServeHTTP())
+		}
+		errchan <- http.ListenAndServe(*HTTP_ADDR, handler)
 	})()
 
 	go (func() {
