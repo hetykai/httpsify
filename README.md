@@ -15,7 +15,7 @@ $ docker run --network host -v $HOME:/root/ -p 443:443 alash3al/httpsify
 ```
 
 ## # From Binaries
-> Go to [releases page](releases)
+> Go to [releases page](/releases)
 
 ### # Building from source
 > You must have the `Go` environment installed
