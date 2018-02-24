@@ -15,7 +15,7 @@ $ docker run --network host -v $HOME:/root/ -p 443:443 alash3al/httpsify
 ```
 
 ## # From Binaries
-> Go to [releases page](/releases)
+> Go to [releases page](https://github.com/alash3al/httpsify/releases)
 
 ### # Building from source
 > You must have the `Go` environment installed
