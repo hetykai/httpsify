@@ -30,13 +30,26 @@ func InitServer() error {
 			return errors.New("Unkown host(" + host + ")")
 		},
 	}
+
+	errchan := make(chan error)
+
 	s := &http.Server{
 		Addr:      *HTTPS_ADDR,
 		TLSConfig: &tls.Config{GetCertificate: m.GetCertificate},
 		Handler:   ServeHTTP(),
 	}
+
 	log.SetOutput(ioutil.Discard)
-	return s.ListenAndServeTLS("", "")
+
+	go (func() {
+		errchan <- http.ListenAndServe(*HTTP_ADDR, m.HTTPHandler(nil))
+	})()
+
+	go (func() {
+		errchan <- s.ListenAndServeTLS("", "")
+	})()
+
+	return <-errchan
 }
 
 // The main server handler

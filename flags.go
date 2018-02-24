@@ -9,9 +9,10 @@ import (
 import "github.com/mitchellh/go-homedir"
 
 var (
-	VERSION     = "httpsify/v3.0.0"
+	VERSION     = "httpsify/v3.1"
 	HOME_DIR, _ = homedir.Dir()
-	HTTPS_ADDR  = flag.String("https", ":443", "the https address to listen on")
+	HTTP_ADDR   = flag.String("http", ":http", "the http address to listen on")
+	HTTPS_ADDR  = flag.String("https", ":https", "the https address to listen on")
 	STORAGE     = flag.String("storage", path.Join(HOME_DIR, ".httpsify/certs"), "the ssl certs storage directory")
 	HOSTS_FILE  = flag.String("hosts", path.Join(HOME_DIR, ".httpsify/hosts.json"), "the sites configurations filename")
 	HSTS        = flag.String("hsts", "max-age=86400; includeSubDomains", "the hsts header value, empty value means disable")
